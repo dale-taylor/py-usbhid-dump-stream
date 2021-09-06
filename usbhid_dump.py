@@ -9,9 +9,9 @@ def dump_stream(bus, devices, timeout, callback):
 		dev = 0
 
 	cmd = "usbhid-dump -a {}:{} -es -t {}".format(bus, dev, timeout)
-	process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 	
-  last_device_id = None
+	process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+	last_device_id = None
 	last_rep_id = None
 	last_timestamp = None
 
@@ -36,9 +36,10 @@ def dump_stream(bus, devices, timeout, callback):
 			if m is not None:
 				data = bytes.fromhex(m.group(1).replace(" ", ""))
 
-				# Call callback function
-				callback(last_device_id, last_rep_id, last_timestamp, data)
-				continue
-
+				# Call callback function if device was included in list
+				if last_device_id in devices:
+					callback(last_device_id, last_rep_id, last_timestamp, data)
+		
+			
 	rc = process.poll()
 	return rc

@@ -19,8 +19,8 @@ def dump_stream(bus, devices, timeout, callback):
 		output = process.stdout.readline()
 		if output == '' and process.poll() is not None:
 			break
+		
 		if output:
-			
 			# Check if line is a device ID and timestamp line
 			m = re.search('\d{3}:(\d{3}):(\d{3}):STREAM\s+([0-9\.]+)', str(output).strip())
 
